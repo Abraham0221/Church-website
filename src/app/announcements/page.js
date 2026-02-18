@@ -21,9 +21,6 @@ const copy = {
     upcomingEventsTitle: "Upcoming Events",
     upcomingEventsBody:
       "Highlighting regular gatherings and special events in our church life.",
-    updateNotePrefix: "To update these announcements, open",
-    updateNoteMiddle: "and edit the",
-    updateNoteSuffix: "lists near the top of the file.",
     footerVerse:
       '"Here is the patience of the saints: here are they that keep the commandments of God, and the faith of Jesus." — Revelation 14:12',
     langPromptTitle: "Choose your language",
@@ -47,9 +44,6 @@ const copy = {
     upcomingEventsTitle: "Próximos eventos",
     upcomingEventsBody:
       "Destacando reuniones regulares y eventos especiales de nuestra iglesia.",
-    updateNotePrefix: "Para actualizar estos anuncios, abre",
-    updateNoteMiddle: "y edita las listas",
-    updateNoteSuffix: "cerca del inicio del archivo.",
     footerVerse:
       '"Aquí está la paciencia de los santos, los que guardan los mandamientos de Dios y la fe de Jesús." — Apocalipsis 14:12',
     langPromptTitle: "Elige tu idioma",
@@ -95,22 +89,36 @@ function AnnouncementCard({ item, language }) {
   const title = isSpanish ? item.titleEs : item.titleEn;
   const description = isSpanish ? item.descriptionEs : item.descriptionEn;
   const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
+  const hasImage = item.image;
 
   return (
-    <article className="flex flex-col gap-2 rounded-2xl bg-white p-4 text-left shadow-sm ring-1 ring-slate-200">
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
-        {item.category && (
-          <span className="inline-flex items-center rounded-full bg-[#c9a84c]/90 px-2.5 py-0.5 text-xs font-semibold text-slate-900">
-            {item.category}
-          </span>
-        )}
+    <article className="flex flex-col gap-3 rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-slate-200 sm:flex-row sm:gap-4 sm:p-6">
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{title}</h3>
+          {item.category && (
+            <span className="shrink-0 inline-flex items-center rounded-full bg-[#c9a84c]/90 px-2.5 py-0.5 text-xs font-semibold text-slate-900">
+              {item.category}
+            </span>
+          )}
+        </div>
+        <p className="mt-1 text-sm font-medium text-[#c9a84c]">
+          {date}
+          {item.time ? ` • ${item.time}` : null}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-slate-600">{description}</p>
       </div>
-      <p className="text-xs font-medium text-[#c9a84c]">
-        {date}
-        {item.time ? ` • ${item.time}` : null}
-      </p>
-      <p className="text-xs leading-relaxed text-slate-600">{description}</p>
+      {hasImage && (
+        <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36 sm:rounded-lg">
+          <Image
+            src={item.image}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, 144px"
+            className="object-cover"
+          />
+        </div>
+      )}
     </article>
   );
 }
@@ -120,50 +128,65 @@ function EventCard({ item, language }) {
   const title = isSpanish ? item.titleEs : item.titleEn;
   const description = isSpanish ? item.descriptionEs : item.descriptionEn;
   const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
+  const hasImage = item.image;
 
   return (
     <article
-      className={`flex flex-col gap-2 rounded-2xl p-4 text-left shadow backdrop-blur ${
+      className={`flex flex-col gap-3 rounded-2xl p-5 text-left shadow backdrop-blur sm:flex-row sm:gap-4 sm:p-6 ${
         item.highlight
           ? "bg-[#c9a84c]/95 text-slate-950 ring-1 ring-[#e5d4a8]"
           : "bg-white text-slate-800 ring-1 ring-slate-200 shadow-sm"
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-sm font-semibold">{title}</h3>
-        {item.category && (
-          <span
-            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-              item.highlight
-                ? "bg-slate-900/90 text-[#e5d4a8]"
-                : "bg-[#c9a84c]/90 text-slate-900"
-            }`}
-          >
-            {item.category}
-          </span>
-        )}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="text-base font-semibold sm:text-lg">{title}</h3>
+          {item.category && (
+            <span
+              className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                item.highlight
+                  ? "bg-slate-900/90 text-[#e5d4a8]"
+                  : "bg-[#c9a84c]/90 text-slate-900"
+              }`}
+            >
+              {item.category}
+            </span>
+          )}
+        </div>
+        <p
+          className={`mt-1 text-sm font-medium ${
+            item.highlight ? "text-slate-950/80" : "text-[#c9a84c]"
+          }`}
+        >
+          {date}
+          {item.time ? ` • ${item.time}` : null}
+        </p>
+        <p
+          className={`mt-2 text-sm leading-relaxed ${
+            item.highlight ? "text-slate-950/80" : "text-slate-600"
+          }`}
+        >
+          {description}
+        </p>
       </div>
-      <p
-        className={`text-xs font-medium ${
-          item.highlight ? "text-slate-950/80" : "text-[#c9a84c]"
-        }`}
-      >
-        {date}
-        {item.time ? ` • ${item.time}` : null}
-      </p>
-      <p
-        className={`text-xs leading-relaxed ${
-          item.highlight ? "text-slate-950/80" : "text-slate-600"
-        }`}
-      >
-        {description}
-      </p>
+      {hasImage && (
+        <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36 sm:rounded-lg">
+          <Image
+            src={item.image}
+            alt=""
+            fill
+            sizes="(max-width: 640px) 100vw, 144px"
+            className="object-cover"
+          />
+        </div>
+      )}
     </article>
   );
 }
 
 export default function AnnouncementsPage() {
   const [language, setLanguage] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -179,7 +202,7 @@ export default function AnnouncementsPage() {
   return (
     <div className="min-h-screen bg-white text-slate-900">
       {/* Header */}
-      <header className="border-b border-slate-200 bg-white">
+      <header className="relative border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center gap-3">
             <div className="relative h-9 w-9 overflow-hidden rounded-full bg-white p-1 shadow ring-1 ring-slate-200">
@@ -201,27 +224,91 @@ export default function AnnouncementsPage() {
             </div>
           </Link>
 
-          <nav
-            className="flex items-center gap-3 text-xs font-medium text-slate-600"
-            aria-label="Main navigation"
-          >
-            <Link
-              href="/"
-              className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+          <div className="flex items-center gap-3">
+            {/* Desktop nav */}
+            <nav
+              className="hidden items-center gap-3 text-xs font-medium text-slate-600 sm:flex"
+              aria-label="Main navigation"
             >
-              {t.navHome}
-            </Link>
-            <Link
-              href="/#about"
-              className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              <Link
+                href="/"
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navHome}
+              </Link>
+              <Link
+                href="/#about"
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navAbout}
+              </Link>
+              <span className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40">
+                {t.navAnnouncements}
+              </span>
+            </nav>
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] sm:hidden"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
             >
-              {t.navAbout}
-            </Link>
-            <span className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40">
-              {t.navAnnouncements}
-            </span>
-          </nav>
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                {menuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
+            </button>
+          </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {menuOpen && (
+          <div className="absolute left-0 right-0 top-full z-50 mt-2 border-b border-slate-200 bg-white px-5 py-4 shadow-lg sm:hidden">
+            <nav
+              className="flex flex-col gap-2"
+              aria-label="Main navigation"
+            >
+              <Link
+                href="/"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                {t.navHome}
+              </Link>
+              <Link
+                href="/#about"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                {t.navAbout}
+              </Link>
+              <span className="rounded-lg px-4 py-3 text-left text-sm font-medium text-[#c9a84c]">
+                {t.navAnnouncements}
+              </span>
+            </nav>
+          </div>
+        )}
       </header>
 
       {/* Main Content */}
@@ -250,7 +337,7 @@ export default function AnnouncementsPage() {
             <p className="text-xs text-slate-600">
               {t.currentAnnouncementsBody}
             </p>
-            <div className="mt-3 grid gap-3">
+            <div className="mt-3 grid gap-4">
               {announcements.map((item) => (
                 <AnnouncementCard
                   key={item.id}
@@ -272,7 +359,7 @@ export default function AnnouncementsPage() {
             <p className="text-xs text-slate-600">
               {t.upcomingEventsBody}
             </p>
-            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+            <div className="mt-3 grid gap-4 sm:grid-cols-2">
               {events.map((item) => (
                 <EventCard
                   key={item.id}
@@ -284,21 +371,7 @@ export default function AnnouncementsPage() {
           </section>
         </div>
 
-        <p className="mt-6 text-[11px] text-slate-600">
-          {t.updateNotePrefix}{" "}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-[#c9a84c]">
-            src/app/announcementsData.js
-          </code>{" "}
-          {t.updateNoteMiddle}{" "}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-[#c9a84c]">
-            announcements
-          </code>{" "}
-          and{" "}
-          <code className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] text-[#c9a84c]">
-            events
-          </code>{" "}
-          {t.updateNoteSuffix}
-        </p>
+        
       </main>
 
       <footer className="border-t border-slate-200 bg-white px-5 py-6 sm:px-6 lg:px-8">

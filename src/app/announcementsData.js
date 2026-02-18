@@ -1,8 +1,7 @@
-// Simple data templates for quick updates
-// To add or edit announcements/events (bilingual):
 // 1. Update the objects below (titleEn/titleEs, descriptionEn/descriptionEs, dateEn/dateEs, time, category).
 // 2. Save the file – the site will reflect your changes immediately.
 // 3. For each item, keep both EN and ES fields in sync so the page looks correct in both languages.
+//
 
 export const announcements = [
   {
@@ -31,6 +30,7 @@ export const announcements = [
     descriptionEs:
       "Acompáñanos entre semana para un tiempo de oración, adoración y reflexión en el santuario.",
     category: "Prayer",
+    image: "/announcements/prayer-meeting.jpg",
   },
 ];
 
@@ -46,8 +46,9 @@ export const events = [
       "A Christ-centered worship service with Bible-based preaching and uplifting music.",
     descriptionEs:
       "Un servicio de adoración centrado en Cristo con predicación basada en la Biblia y música edificante.",
-    category: "Worship",
+    category: "",
     highlight: true,
+    image: "",
   },
   {
     id: "sabbath-school",
@@ -60,7 +61,7 @@ export const events = [
       "Interactive Bible study classes for all ages. Visitors are always welcome.",
     descriptionEs:
       "Clases interactivas de estudio bíblico para todas las edades. Los visitantes siempre son bienvenidos.",
-    category: "Discipleship",
+    category: "",
     highlight: true,
   },
   {
@@ -74,6 +75,6 @@ export const events = [
       "A time of worship, fellowship, and spiritual growth for youth and young adults.",
     descriptionEs:
       "Un tiempo de adoración, compañerismo y crecimiento espiritual para jóvenes y jóvenes adultos.",
-    category: "Youth",
+    category: "",
   },
 ];

@@ -232,8 +232,10 @@ export default function Home() {
 
   const activeLanguage = language === "es" ? "es" : "en";
   const t = copy[activeLanguage];
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const scrollToSection = (id) => {
+    setMenuOpen(false);
     if (typeof window === "undefined") return;
     const el = document.getElementById(id);
     if (el) {
@@ -262,7 +264,7 @@ export default function Home() {
           className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-52 bg-linear-to-b from-[#c9a84c]/15 via-transparent to-transparent"
         />
 
-        <header className="mx-auto flex max-w-5xl items-center justify-between px-5 pt-5 sm:px-6 sm:pt-6 lg:px-8">
+        <header className="relative mx-auto flex max-w-5xl items-center justify-between px-5 pt-5 sm:px-6 sm:pt-6 lg:px-8">
           <div className="flex items-center gap-3">
             <div className="relative h-9 w-9 overflow-hidden rounded-full bg-white p-1 shadow ring-1 ring-slate-200">
               <Image
@@ -283,31 +285,99 @@ export default function Home() {
             </div>
           </div>
 
-          <nav
-            className="hidden items-center gap-5 text-xs font-medium text-slate-600 sm:flex"
-            aria-label="Main navigation"
-          >
+          <div className="flex items-center gap-3">
+            {/* Desktop nav */}
+            <nav
+              className="hidden items-center gap-5 text-xs font-medium text-slate-600 sm:flex"
+              aria-label="Main navigation"
+            >
+              <button
+                type="button"
+                onClick={() => scrollToSection("home")}
+                className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40 transition hover:bg-[#c9a84c]/10 hover:text-[#c9a84c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navHome}
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection("about")}
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navAbout}
+              </button>
+              <Link
+                href="/announcements"
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navAnnouncements}
+              </Link>
+            </nav>
+
+            {/* Mobile hamburger */}
             <button
               type="button"
-              onClick={() => scrollToSection("home")}
-              className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40 transition hover:bg-[#c9a84c]/10 hover:text-[#c9a84c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] sm:hidden"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
             >
-              {t.navHome}
+              <svg
+                className="h-6 w-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                {menuOpen ? (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                ) : (
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                )}
+              </svg>
             </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection("about")}
-              className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-            >
-              {t.navAbout}
-            </button>
-            <Link
-              href="/announcements"
-              className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-            >
-              {t.navAnnouncements}
-            </Link>
-          </nav>
+          </div>
+
+          {/* Mobile dropdown */}
+          {menuOpen && (
+            <div className="absolute left-0 right-0 top-full z-50 mt-2 border-b border-slate-200 bg-white px-5 py-4 shadow-lg sm:hidden">
+              <nav
+                className="flex flex-col gap-2"
+                aria-label="Main navigation"
+              >
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("home")}
+                  className="rounded-lg px-4 py-3 text-left text-sm font-medium text-[#c9a84c] transition hover:bg-[#c9a84c]/10"
+                >
+                  {t.navHome}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("about")}
+                  className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+                >
+                  {t.navAbout}
+                </button>
+                <Link
+                  href="/announcements"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+                >
+                  {t.navAnnouncements}
+                </Link>
+              </nav>
+            </div>
+          )}
         </header>
 
         <main

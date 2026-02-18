@@ -3,7 +3,7 @@
  * Update these URLs with your church's actual social media profiles.
  */
 export const socialLinks = {
-  facebook: "https://www.facebook.com/your-church-page",
-  youtube: "https://www.youtube.com/@your-church-channel",
-  instagram: "https://www.instagram.com/your-church-profile",
+  facebook: "https://www.facebook.com/iasdmcallennorte",
+  youtube: "https://www.youtube.com/@iasdpharr-mcallennorte",
+  instagram: "https://www.instagram.com/iglesiamcallennorte",
 };

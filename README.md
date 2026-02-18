@@ -1,1 +1,1 @@
-Created a website for my personal church. Website includes introduction to the church, announcements/events for church, and as well as information and contact information about the church.
+Created a website for my personal church. Website includes introduction to the church, announcements/events for church, and as well as information and contact information about the church. People can scan a qr code that will lead them into the website's page to find announcements

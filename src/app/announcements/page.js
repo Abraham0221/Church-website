@@ -13,6 +13,7 @@ const copy = {
     navHome: "Home",
     navAbout: "About",
     navAnnouncements: "Announcements",
+    navTithesOfferings: "Tithes/Offerings",
     announcementsEyebrow: "Stay connected",
     announcementsHeading: "Announcements & Events",
     currentAnnouncementsTitle: "Current Announcements",
@@ -36,6 +37,7 @@ const copy = {
     navHome: "Inicio",
     navAbout: "Quiénes somos",
     navAnnouncements: "Anuncios",
+    navTithesOfferings: "Diezmos/Ofrendas",
     announcementsEyebrow: "Mantente conectado",
     announcementsHeading: "Anuncios y Eventos",
     currentAnnouncementsTitle: "Anuncios actuales",
@@ -245,6 +247,14 @@ export default function AnnouncementsPage() {
               <span className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40">
                 {t.navAnnouncements}
               </span>
+              <a
+                href="https://adventistgiving.org/donate/ANWFRQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navTithesOfferings}
+              </a>
             </nav>
 
             {/* Mobile hamburger */}
@@ -306,6 +316,15 @@ export default function AnnouncementsPage() {
               <span className="rounded-lg px-4 py-3 text-left text-sm font-medium text-[#c9a84c]">
                 {t.navAnnouncements}
               </span>
+              <a
+                href="https://adventistgiving.org/donate/ANWFRQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+              >
+                {t.navTithesOfferings}
+              </a>
             </nav>
           </div>
         )}

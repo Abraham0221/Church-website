@@ -30,7 +30,7 @@ export const announcements = [
     descriptionEs:
       "Acompáñanos entre semana para un tiempo de oración, adoración y reflexión en el santuario.",
     category: "Prayer",
-    image: "/announcements/prayer-meeting.jpg",
+    image: "/announcements/volleyball.jpg",
   },
 ];
 

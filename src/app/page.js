@@ -91,6 +91,7 @@ const copy = {
     navHome: "Home",
     navAbout: "About",
     navAnnouncements: "Announcements",
+    navTithesOfferings: "Tithes/Offerings",
     heroEyebrow: "Welcome to our church family",
     heroParagraph:
       "A place of worship, community, and hope. Join us as we grow together in faith and service, centered on Jesus and grounded in God's Word.",
@@ -150,6 +151,7 @@ const copy = {
     navHome: "Inicio",
     navAbout: "Quiénes somos",
     navAnnouncements: "Anuncios",
+    navTithesOfferings: "Diezmos/Ofrendas",
     heroEyebrow: "Bienvenido a nuestra familia",
     heroParagraph:
       "Un lugar de adoración, comunidad y esperanza. Acompáñanos mientras crecemos juntos en la fe y el servicio, centrados en Jesús y en la Palabra de Dios.",
@@ -311,6 +313,14 @@ export default function Home() {
               >
                 {t.navAnnouncements}
               </Link>
+              <a
+                href="https://adventistgiving.org/donate/ANWFRQ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              >
+                {t.navTithesOfferings}
+              </a>
             </nav>
 
             {/* Mobile hamburger */}
@@ -375,6 +385,15 @@ export default function Home() {
                 >
                   {t.navAnnouncements}
                 </Link>
+                <a
+                  href="https://adventistgiving.org/donate/ANWFRQ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
+                >
+                  {t.navTithesOfferings}
+                </a>
               </nav>
             </div>
           )}

@@ -15,7 +15,7 @@ export const announcements = [
       "We are glad you're here. Scan this code anytime to stay up to date with what's happening in our church family.",
     descriptionEs:
       "Nos alegra que estés aquí. Escanea este código en cualquier momento para mantenerte al día con lo que sucede en nuestra familia de iglesia.",
-    category: "General",
+    category: "",
   },
 
   {
@@ -29,8 +29,8 @@ export const announcements = [
       "Join us for a midweek time of prayer, worship, and reflection in the sanctuary.",
     descriptionEs:
       "Acompáñanos entre semana para un tiempo de oración, adoración y reflexión en el santuario.",
-    category: "Prayer",
-    image: "/announcements/volleyball.jpg",
+    category: "",
+    image: "",
   },
 ];
 

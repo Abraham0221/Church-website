@@ -24,8 +24,8 @@ export const metadata = {
   description:
     "McAllen North Seventh-day Adventist Church - A place of worship, community, and hope in McAllen, Texas.",
   icons: {
-    icon: "/adventist-logo.gif",
-    apple: "/adventist-logo.gif",
+    icon: "./public/adventist-logo.gif",
+    apple: "./public/adventist-logo.gif",
   },
 };
 

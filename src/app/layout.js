@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -18,7 +19,7 @@ const baseUrl =
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "McAllen North SDA Church",
+    default: "iglesia adventista mcallen norte",
     template: "%s | McAllen North SDA Church",
   },
   description:

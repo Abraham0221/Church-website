@@ -92,6 +92,26 @@ function AnnouncementCard({ item, language }) {
   const description = isSpanish ? item.descriptionEs : item.descriptionEn;
   const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
   const hasImage = item.image;
+  const handleImageError = (event) => {
+    // #region agent log
+    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "423d15",
+      },
+      body: JSON.stringify({
+        sessionId: "423d15",
+        runId: "initial",
+        hypothesisId: "H1",
+        location: "src/app/announcements/page.js:AnnouncementCard:onError",
+        message: "Announcement image failed to load",
+        data: { id: item.id, src: item.image, currentSrc: event?.currentTarget?.src },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  };
 
   return (
     <article className="flex flex-col gap-3 rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-slate-200 sm:flex-row sm:gap-4 sm:p-6">
@@ -118,6 +138,7 @@ function AnnouncementCard({ item, language }) {
             fill
             sizes="(max-width: 640px) 100vw, 144px"
             className="object-cover"
+            onError={handleImageError}
           />
         </div>
       )}
@@ -130,7 +151,67 @@ function EventCard({ item, language }) {
   const title = isSpanish ? item.titleEs : item.titleEn;
   const description = isSpanish ? item.descriptionEs : item.descriptionEn;
   const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
-  const hasImage = item.image;
+  const hasImage = Boolean(item.image);
+  const handleImageError = (event) => {
+    // #region agent log
+    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "423d15",
+      },
+      body: JSON.stringify({
+        sessionId: "423d15",
+        runId: "initial",
+        hypothesisId: "H2",
+        location: "src/app/announcements/page.js:EventCard:onError",
+        message: "Event image failed to load",
+        data: { id: item.id, src: item.image, currentSrc: event?.currentTarget?.src },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+  };
+
+  if (item.featured) {
+    return (
+      <article className="group relative overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200 sm:col-span-2">
+        <div className="flex flex-col sm:flex-row">
+          {hasImage && (
+            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-gradient-to-br from-[#f5e6c4] via-white to-[#e5d4a8] sm:aspect-auto sm:w-64 md:w-72">
+              <Image
+                src={item.image}
+                alt={title}
+                fill
+                sizes="(max-width: 640px) 100vw, 288px"
+                className="object-contain transition duration-500 group-hover:scale-[1.02]"
+                onError={handleImageError}
+              />
+            </div>
+          )}
+          <div className="flex min-w-0 flex-1 flex-col justify-center p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
+                {title}
+              </h3>
+              {item.category && (
+                <span className="shrink-0 inline-flex items-center rounded-full bg-[#c9a84c]/90 px-2.5 py-0.5 text-xs font-semibold text-slate-900">
+                  {item.category}
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-sm font-medium text-[#c9a84c]">
+              {date}
+              {item.time ? ` • ${item.time}` : null}
+            </p>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+              {description}
+            </p>
+          </div>
+        </div>
+      </article>
+    );
+  }
 
   return (
     <article
@@ -179,6 +260,7 @@ function EventCard({ item, language }) {
             fill
             sizes="(max-width: 640px) 100vw, 144px"
             className="object-cover"
+            onError={handleImageError}
           />
         </div>
       )}
@@ -193,6 +275,27 @@ export default function AnnouncementsPage() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(LANGUAGE_KEY);
+    // #region agent log
+    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Debug-Session-Id": "423d15",
+      },
+      body: JSON.stringify({
+        sessionId: "423d15",
+        runId: "initial",
+        hypothesisId: "H3",
+        location: "src/app/announcements/page.js:AnnouncementsPage:useEffect",
+        message: "Announcements page runtime snapshot",
+        data: {
+          storedLanguage: stored,
+          eventImages: events.filter((event) => Boolean(event.image)).map((event) => ({ id: event.id, image: event.image })),
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
     if (stored === "en" || stored === "es") {
       setLanguage(stored);
     }
@@ -379,13 +482,15 @@ export default function AnnouncementsPage() {
               {t.upcomingEventsBody}
             </p>
             <div className="mt-3 grid gap-4 sm:grid-cols-2">
-              {events.map((item) => (
-                <EventCard
-                  key={item.id}
-                  item={item}
-                  language={activeLanguage}
-                />
-              ))}
+              {[...events]
+                .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
+                .map((item) => (
+                  <EventCard
+                    key={item.id}
+                    item={item}
+                    language={activeLanguage}
+                  />
+                ))}
             </div>
           </section>
         </div>

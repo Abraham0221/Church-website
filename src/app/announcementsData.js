@@ -77,4 +77,36 @@ export const events = [
       "Un tiempo de adoración, compañerismo y crecimiento espiritual para jóvenes y jóvenes adultos.",
     category: "",
   },
+  {
+    id: "renovacion-votos",
+    titleEn: "Vow Renewal — Married Couples",
+    titleEs: "Renovación de Votos — Matrimonios",
+    dateEn: "April 24 & 25, 2026",
+    dateEs: "24 y 25 de Abril, 2026",
+    time: "",
+    descriptionEn:
+      "A three-part consecration weekend for married couples at McAllen North and Pharr. Friday 7:30 PM — Communion service with the emblems and covenant with God, at McAllen North. Saturday 11:00 AM — Consecration sermon for couples and families, at each church. Saturday 6:30 PM — Special vow renewal ceremony with processional, covenant signing, and special dinner, at McAllen North (gala attire; wives in light colors, guests formal).",
+    descriptionEs:
+      "Fin de semana de consagración en tres partes para matrimonios en McAllen Norte y Pharr. Viernes 7:30 PM — Santa Cena con los emblemas y pacto con Dios, en McAllen Norte (ropa formal). Sábado 11:00 AM — Sermón de consagración para matrimonios y familias, en cada iglesia (ropa formal). Sábado 6:30 PM — Ceremonia especial de renovación de votos con desfile, firma de compromiso y cena especial, en McAllen Norte (ropa de gala; esposas de color claro e invitados ropa formal). ",
+    category: "Especial",
+    featured: true,
+    highlight: false,
+    image: "/matrimonio.jpeg",
+  },
+  {
+    id: "cocina-saludable",
+    titleEn: "Healthy Cooking — Vida Plena",
+    titleEs: "Cocina Saludable — Vida Plena",
+    dateEn: "Sunday, April 26, 2026",
+    dateEs: "Domingo, 26 de Abril, 2026",
+    time: "5:00 PM",
+    descriptionEn:
+      "Join our Vida Plena wellness program for a hands-on healthy cooking class. Bring your friends and neighbors — everyone is welcome.",
+    descriptionEs:
+      "Acompáñanos en nuestro programa de bienestar Vida Plena para una clase práctica de cocina saludable. Asiste con tus amigos y vecinos — todos son bienvenidos.",
+    category: "Taller",
+    featured: true,
+    highlight: false,
+    image: "/cocinadesalud.jpeg",
+  },
 ];

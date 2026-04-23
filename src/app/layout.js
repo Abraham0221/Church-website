@@ -31,6 +31,24 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  // #region agent log
+  fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "423d15",
+    },
+    body: JSON.stringify({
+      sessionId: "423d15",
+      runId: "initial",
+      hypothesisId: "H4",
+      location: "src/app/layout.js:RootLayout",
+      message: "Root layout metadata icon configuration",
+      data: { icon: metadata?.icons?.icon, apple: metadata?.icons?.apple },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
   return (
     <html lang="en">
       <body

@@ -19,7 +19,7 @@ const baseUrl =
 export const metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "iglesia adventista mcallen norte",
+    default: "Iglesia Adventista Mcallen Norte",
     template: "%s | McAllen North SDA Church",
   },
   description:

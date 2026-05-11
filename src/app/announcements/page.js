@@ -178,7 +178,7 @@ function EventCard({ item, language }) {
       <article className="group relative overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200 sm:col-span-2">
         <div className="flex flex-col sm:flex-row">
           {hasImage && (
-            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden bg-gradient-to-br from-[#f5e6c4] via-white to-[#e5d4a8] sm:aspect-auto sm:w-64 md:w-72">
+            <div className="relative aspect-4/5 w-full shrink-0 overflow-hidden bg-linear-to-br from-[#f5e6c4] via-white to-[#e5d4a8] sm:aspect-auto sm:w-64 md:w-72">
               <Image
                 src={item.image}
                 alt={title}

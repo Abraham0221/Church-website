@@ -2,622 +2,417 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { announcements, events } from "../announcementsData";
-import { socialLinks } from "../socialLinks";
 
-const LANGUAGE_KEY = "mn-language";
+const LANGUAGE_KEY = "mcn-lang";
 
-const copy = {
+const serif = "var(--font-newsreader), 'Newsreader', serif";
+const sans = "var(--font-archivo), 'Archivo', sans-serif";
+
+const DONATE_URL = "https://adventistgiving.org/donate/ANWFRQ";
+
+const SOCIAL = {
+  facebook: "https://www.facebook.com/iasdmcallennorte",
+  youtube: "https://www.youtube.com/@iasdpharr-mcallennorte",
+  instagram: "https://www.instagram.com/iglesiamcallennorte",
+};
+
+const STRINGS = {
   en: {
+    brand1: "McAllen North",
+    brand2: "Seventh-day Adventist Church",
     navHome: "Home",
     navAbout: "About",
-    navAnnouncements: "Announcements",
-    navTithesOfferings: "Tithes/Offerings",
-    announcementsEyebrow: "Stay connected",
-    announcementsHeading: "Announcements & Events",
-    currentAnnouncementsTitle: "Current Announcements",
-    currentAnnouncementsBody:
-      "Updated regularly. Check back each Sabbath for the latest information.",
-    upcomingEventsTitle: "Upcoming Events",
-    upcomingEventsBody:
-      "Highlighting regular gatherings and special events in our church life.",
-    footerVerse:
-      '"Here is the patience of the saints: here are they that keep the commandments of God, and the faith of Jesus." — Revelation 14:12',
-    langPromptTitle: "Choose your language",
-    langPromptBody:
-      "Welcome to McAllen North SDA Church. Please choose your preferred language for this page.",
-    langEnglish: "English",
-    langSpanish: "Español",
-    backToHome: "Back to Home",
-    qrWelcome: "Welcome! You scanned the QR code from your seat.",
-    footerFollowUs: "Follow us",
+    navAnn: "Announcements",
+    navGive: "Tithes/Offerings",
+    qrBanner: "Welcome! You scanned the QR code from your seat.",
+    eyebrow: "Stay connected",
+    title: "Announcements & Events",
+    curT: "Current Announcements",
+    curD: "Updated regularly. Check back each Sabbath for the latest information.",
+    upT: "Upcoming Events",
+    upD: "Highlighting regular gatherings and special events in our church life.",
+    whereT: "Where we meet",
+    addr1: "1217 N 27th 1/2 St,",
+    addr2: "McAllen, TX",
+    call: "Call us: 956-686-5065",
+    followT: "Follow us",
+    yt: "YouTube — Sermons",
+    verse:
+      "“Here is the patience of the saints: here are they that keep the commandments of God, and the faith of Jesus.” — Revelation 14:12",
+    copy: "© 2026 McAllen North Seventh-day Adventist Church. All rights reserved.",
   },
   es: {
+    brand1: "McAllen Norte",
+    brand2: "Iglesia Adventista del Séptimo Día",
     navHome: "Inicio",
-    navAbout: "Quiénes somos",
-    navAnnouncements: "Anuncios",
-    navTithesOfferings: "Diezmos/Ofrendas",
-    announcementsEyebrow: "Mantente conectado",
-    announcementsHeading: "Anuncios y Eventos",
-    currentAnnouncementsTitle: "Anuncios actuales",
-    currentAnnouncementsBody:
-      "Se actualiza regularmente. Vuelve cada sábado para ver la información más reciente.",
-    upcomingEventsTitle: "Próximos eventos",
-    upcomingEventsBody:
-      "Destacando reuniones regulares y eventos especiales de nuestra iglesia.",
-    footerVerse:
-      '"Aquí está la paciencia de los santos, los que guardan los mandamientos de Dios y la fe de Jesús." — Apocalipsis 14:12',
-    langPromptTitle: "Elige tu idioma",
-    langPromptBody:
-      "Bienvenido a McAllen North SDA Church. Por favor elige tu idioma preferido para esta página.",
-    langEnglish: "English",
-    langSpanish: "Español",
-    backToHome: "Volver al inicio",
-    qrWelcome: "¡Bienvenido! Escaneaste el código QR desde tu asiento.",
-    footerFollowUs: "Síguenos",
+    navAbout: "Nosotros",
+    navAnn: "Anuncios",
+    navGive: "Diezmos/Ofrendas",
+    qrBanner: "¡Bienvenido! Escaneaste el código QR desde tu asiento.",
+    eyebrow: "Mantente conectado",
+    title: "Anuncios y Eventos",
+    curT: "Anuncios Actuales",
+    curD: "Se actualiza regularmente. Vuelve cada sábado para la información más reciente.",
+    upT: "Próximos Eventos",
+    upD: "Destacando las reuniones regulares y los eventos especiales de nuestra vida de iglesia.",
+    whereT: "Dónde nos reunimos",
+    addr1: "1217 N 27th 1/2 St,",
+    addr2: "McAllen, TX",
+    call: "Llámanos: 956-686-5065",
+    followT: "Síguenos",
+    yt: "YouTube — Sermones",
+    verse:
+      "“Aquí está la paciencia de los santos; aquí están los que guardan los mandamientos de Dios y la fe de Jesús.” — Apocalipsis 14:12",
+    copy: "© 2026 Iglesia Adventista del Séptimo Día McAllen Norte. Todos los derechos reservados.",
   },
 };
 
-const SocialIcon = ({ href, ariaLabel, children }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label={ariaLabel}
-    className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-[#c9a84c] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2"
-  >
-    {children}
-  </a>
-);
-
-function SectionHeading({ label, eyebrow }) {
-  return (
-    <div className="mb-6">
-      {eyebrow && (
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9a84c]">
-          {eyebrow}
-        </p>
-      )}
-      <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-        {label}
-      </h2>
-    </div>
-  );
-}
-
-function AnnouncementCard({ item, language }) {
-  const isSpanish = language === "es";
-  const title = isSpanish ? item.titleEs : item.titleEn;
-  const description = isSpanish ? item.descriptionEs : item.descriptionEn;
-  const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
-  const hasImage = item.image;
-  const handleImageError = (event) => {
-    // #region agent log
-    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "423d15",
-      },
-      body: JSON.stringify({
-        sessionId: "423d15",
-        runId: "initial",
-        hypothesisId: "H1",
-        location: "src/app/announcements/page.js:AnnouncementCard:onError",
-        message: "Announcement image failed to load",
-        data: { id: item.id, src: item.image, currentSrc: event?.currentTarget?.src },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
+function pillStyle(active) {
+  return {
+    padding: "7px 15px",
+    border: "none",
+    cursor: "pointer",
+    font: `600 13px ${sans}`,
+    background: active ? "#33534B" : "transparent",
+    color: active ? "#fff" : "#33534B",
   };
-
-  return (
-    <article className="flex flex-col gap-3 rounded-2xl bg-white p-5 text-left shadow-sm ring-1 ring-slate-200 sm:flex-row sm:gap-4 sm:p-6">
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-semibold text-slate-900 sm:text-lg">{title}</h3>
-          {item.category && (
-            <span className="shrink-0 inline-flex items-center rounded-full bg-[#c9a84c]/90 px-2.5 py-0.5 text-xs font-semibold text-slate-900">
-              {item.category}
-            </span>
-          )}
-        </div>
-        <p className="mt-1 text-sm font-medium text-[#c9a84c]">
-          {date}
-          {item.time ? ` • ${item.time}` : null}
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-slate-600">{description}</p>
-      </div>
-      {hasImage && (
-        <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36 sm:rounded-lg">
-          <Image
-            src={item.image}
-            alt=""
-            fill
-            sizes="(max-width: 640px) 100vw, 144px"
-            className="object-cover"
-            onError={handleImageError}
-          />
-        </div>
-      )}
-    </article>
-  );
-}
-
-function EventCard({ item, language }) {
-  const isSpanish = language === "es";
-  const title = isSpanish ? item.titleEs : item.titleEn;
-  const description = isSpanish ? item.descriptionEs : item.descriptionEn;
-  const date = isSpanish ? (item.dateEs ?? item.dateEn) : (item.dateEn ?? item.date);
-  const hasImage = Boolean(item.image);
-  const handleImageError = (event) => {
-    // #region agent log
-    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "423d15",
-      },
-      body: JSON.stringify({
-        sessionId: "423d15",
-        runId: "initial",
-        hypothesisId: "H2",
-        location: "src/app/announcements/page.js:EventCard:onError",
-        message: "Event image failed to load",
-        data: { id: item.id, src: item.image, currentSrc: event?.currentTarget?.src },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-  };
-
-  if (item.featured) {
-    return (
-      <article className="group relative overflow-hidden rounded-2xl bg-white shadow-md ring-1 ring-slate-200 sm:col-span-2">
-        <div className="flex flex-col sm:flex-row">
-          {hasImage && (
-            <div className="relative aspect-4/5 w-full shrink-0 overflow-hidden bg-linear-to-br from-[#f5e6c4] via-white to-[#e5d4a8] sm:aspect-auto sm:w-64 md:w-72">
-              <Image
-                src={item.image}
-                alt={title}
-                fill
-                sizes="(max-width: 640px) 100vw, 288px"
-                className="object-contain transition duration-500 group-hover:scale-[1.02]"
-                onError={handleImageError}
-              />
-            </div>
-          )}
-          <div className="flex min-w-0 flex-1 flex-col justify-center p-5 sm:p-6">
-            <div className="flex items-start justify-between gap-3">
-              <h3 className="text-lg font-semibold text-slate-900 sm:text-xl">
-                {title}
-              </h3>
-              {item.category && (
-                <span className="shrink-0 inline-flex items-center rounded-full bg-[#c9a84c]/90 px-2.5 py-0.5 text-xs font-semibold text-slate-900">
-                  {item.category}
-                </span>
-              )}
-            </div>
-            <p className="mt-1 text-sm font-medium text-[#c9a84c]">
-              {date}
-              {item.time ? ` • ${item.time}` : null}
-            </p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600">
-              {description}
-            </p>
-          </div>
-        </div>
-      </article>
-    );
-  }
-
-  return (
-    <article
-      className={`flex flex-col gap-3 rounded-2xl p-5 text-left shadow backdrop-blur sm:flex-row sm:gap-4 sm:p-6 ${
-        item.highlight
-          ? "bg-[#c9a84c]/95 text-slate-950 ring-1 ring-[#e5d4a8]"
-          : "bg-white text-slate-800 ring-1 ring-slate-200 shadow-sm"
-      }`}
-    >
-      <div className="min-w-0 flex-1">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-base font-semibold sm:text-lg">{title}</h3>
-          {item.category && (
-            <span
-              className={`shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                item.highlight
-                  ? "bg-slate-900/90 text-[#e5d4a8]"
-                  : "bg-[#c9a84c]/90 text-slate-900"
-              }`}
-            >
-              {item.category}
-            </span>
-          )}
-        </div>
-        <p
-          className={`mt-1 text-sm font-medium ${
-            item.highlight ? "text-slate-950/80" : "text-[#c9a84c]"
-          }`}
-        >
-          {date}
-          {item.time ? ` • ${item.time}` : null}
-        </p>
-        <p
-          className={`mt-2 text-sm leading-relaxed ${
-            item.highlight ? "text-slate-950/80" : "text-slate-600"
-          }`}
-        >
-          {description}
-        </p>
-      </div>
-      {hasImage && (
-        <div className="relative h-32 w-full shrink-0 overflow-hidden rounded-xl sm:h-28 sm:w-36 sm:rounded-lg">
-          <Image
-            src={item.image}
-            alt=""
-            fill
-            sizes="(max-width: 640px) 100vw, 144px"
-            className="object-cover"
-            onError={handleImageError}
-          />
-        </div>
-      )}
-    </article>
-  );
 }
 
 export default function AnnouncementsPage() {
-  const [language, setLanguage] = useState(null);
+  const [lang, setLang] = useState("en");
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
     const stored = window.localStorage.getItem(LANGUAGE_KEY);
-    // #region agent log
-    fetch("http://127.0.0.1:7460/ingest/892f813f-23dc-4954-abe3-e90284d8d110", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Debug-Session-Id": "423d15",
-      },
-      body: JSON.stringify({
-        sessionId: "423d15",
-        runId: "initial",
-        hypothesisId: "H3",
-        location: "src/app/announcements/page.js:AnnouncementsPage:useEffect",
-        message: "Announcements page runtime snapshot",
-        data: {
-          storedLanguage: stored,
-          eventImages: events.filter((event) => Boolean(event.image)).map((event) => ({ id: event.id, image: event.image })),
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-    if (stored === "en" || stored === "es") {
-      setLanguage(stored);
-    }
+    if (stored === "en" || stored === "es") setLang(stored);
   }, []);
 
-  const activeLanguage = language === "es" ? "es" : "en";
-  const t = copy[activeLanguage];
+  const setLanguage = (l) => {
+    window.localStorage.setItem(LANGUAGE_KEY, l);
+    setLang(l);
+  };
+
+  const t = STRINGS[lang] || STRINGS.en;
+
+  const LangToggle = () => (
+    <div
+      style={{
+        display: "flex",
+        border: "1px solid #C9C3B2",
+        borderRadius: "999px",
+        overflow: "hidden",
+      }}
+    >
+      <button onClick={() => setLanguage("en")} style={pillStyle(lang === "en")}>
+        EN
+      </button>
+      <button onClick={() => setLanguage("es")} style={pillStyle(lang === "es")}>
+        ES
+      </button>
+    </div>
+  );
+
+  // Pull each editable item from announcementsData.js and resolve its
+  // English/Spanish fields for the active language. `kicker` is the small
+  // label at the top of each card (date + optional time).
+  const localize = (item) => {
+    const isEs = lang === "es";
+    const date = (isEs ? item.dateEs : item.dateEn) || "";
+    const time = item.time || "";
+    return {
+      id: item.id,
+      kicker: [date, time].filter(Boolean).join(" • "),
+      title: isEs ? item.titleEs : item.titleEn,
+      description: isEs ? item.descriptionEs : item.descriptionEn,
+    };
+  };
+
+  const currentAnnouncements = announcements.map(localize);
+  const upcomingEvents = events.map(localize);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      {/* Header */}
-      <header className="relative border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-6 lg:px-8">
-          <Link href="/" className="flex items-center gap-3">
-            <div className="relative h-9 w-9 overflow-hidden rounded-full bg-white p-1 shadow ring-1 ring-slate-200">
-              <Image
-                src="/adventist-logo.gif"
-                alt="Seventh-day Adventist Church logo"
-                fill
-                sizes="36px"
-                className="object-contain"
-              />
-            </div>
-            <div className="leading-tight">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c9a84c]">
-                McAllen North
-              </p>
-              <p className="text-xs text-slate-600">
-                Seventh-day Adventist Church
-              </p>
-            </div>
+    <div style={{ background: "#FAF7F0", minHeight: "100vh" }}>
+      {/* NAV */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "14px 24px",
+          padding: "20px clamp(20px,5vw,72px)",
+          borderBottom: "1px solid #E4DFD2",
+          background: "#FAF7F0",
+        }}
+      >
+        <Link href="/" style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+          <img
+            src="/adventist-logo.png"
+            alt="Seventh-day Adventist Church logo"
+            style={{ width: "40px", height: "auto", display: "block" }}
+          />
+          <span>
+            <span style={{ display: "block", font: `600 20px/1.1 ${serif}`, color: "#22352F" }}>
+              {t.brand1}
+            </span>
+            <span
+              style={{
+                display: "block",
+                font: `500 11px/1.3 ${sans}`,
+                letterSpacing: ".16em",
+                textTransform: "uppercase",
+                color: "#8A8474",
+              }}
+            >
+              {t.brand2}
+            </span>
+          </span>
+        </Link>
+
+        {/* Desktop nav */}
+        <div
+          className="hidden min-[900px]:flex"
+          style={{
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "14px clamp(16px,2.5vw,36px)",
+            font: `500 16px ${sans}`,
+            color: "#33534B",
+          }}
+        >
+          <Link href="/">{t.navHome}</Link>
+          <Link href="/#about">{t.navAbout}</Link>
+          <Link
+            href="/announcements"
+            style={{ color: "#22352F", borderBottom: "2px solid #C9971C", paddingBottom: "4px" }}
+          >
+            {t.navAnn}
           </Link>
-
-          <div className="flex items-center gap-3">
-            {/* Desktop nav */}
-            <nav
-              className="hidden items-center gap-3 text-xs font-medium text-slate-600 sm:flex"
-              aria-label="Main navigation"
-            >
-              <Link
-                href="/"
-                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-              >
-                {t.navHome}
-              </Link>
-              <Link
-                href="/#about"
-                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-              >
-                {t.navAbout}
-              </Link>
-              <span className="rounded-full px-3 py-1 text-[#c9a84c] shadow-sm ring-1 ring-[#c9a84c]/40">
-                {t.navAnnouncements}
-              </span>
-              <a
-                href="https://adventistgiving.org/donate/ANWFRQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full px-3 py-1 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-              >
-                {t.navTithesOfferings}
-              </a>
-            </nav>
-
-            {/* Mobile hamburger */}
-            <button
-              type="button"
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] sm:hidden"
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={menuOpen}
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                {menuOpen ? (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                ) : (
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile dropdown */}
-        {menuOpen && (
-          <div className="absolute left-0 right-0 top-full z-50 mt-2 border-b border-slate-200 bg-white px-5 py-4 shadow-lg sm:hidden">
-            <nav
-              className="flex flex-col gap-2"
-              aria-label="Main navigation"
-            >
-              <Link
-                href="/"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                {t.navHome}
-              </Link>
-              <Link
-                href="/#about"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                {t.navAbout}
-              </Link>
-              <span className="rounded-lg px-4 py-3 text-left text-sm font-medium text-[#c9a84c]">
-                {t.navAnnouncements}
-              </span>
-              <a
-                href="https://adventistgiving.org/donate/ANWFRQ"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100"
-              >
-                {t.navTithesOfferings}
-              </a>
-            </nav>
-          </div>
-        )}
-      </header>
-
-      {/* Main Content */}
-      <main className="mx-auto max-w-5xl px-5 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-        {/* QR Welcome Message */}
-        <div className="mb-8 rounded-2xl bg-[#c9a84c]/10 p-4 text-center ring-1 ring-[#c9a84c]/20">
-          <p className="text-sm font-semibold text-[#c9a84c] sm:text-base">
-            {t.qrWelcome}
-          </p>
-        </div>
-
-        <SectionHeading
-          eyebrow={t.announcementsEyebrow}
-          label={t.announcementsHeading}
-        />
-
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-start">
-          {/* Current announcements */}
-          <section
-            aria-label="Current announcements"
-            className="space-y-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"
+          <a
+            href={DONATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-full bg-[#33534B] font-semibold text-white transition-colors hover:bg-[#22352F] hover:text-white"
+            style={{ padding: "12px 24px" }}
           >
-            <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
-              {t.currentAnnouncementsTitle}
-            </h3>
-            <p className="text-xs text-slate-600">
-              {t.currentAnnouncementsBody}
-            </p>
-            <div className="mt-3 grid gap-4">
-              {announcements.map((item) => (
-                <AnnouncementCard
-                  key={item.id}
-                  item={item}
-                  language={activeLanguage}
-                />
-              ))}
-            </div>
-          </section>
-
-          {/* Upcoming events */}
-          <section
-            aria-label="Upcoming events"
-            className="space-y-4 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-200"
-          >
-            <h3 className="text-sm font-semibold text-slate-900 sm:text-base">
-              {t.upcomingEventsTitle}
-            </h3>
-            <p className="text-xs text-slate-600">
-              {t.upcomingEventsBody}
-            </p>
-            <div className="mt-3 grid gap-4 sm:grid-cols-2">
-              {[...events]
-                .sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0))
-                .map((item) => (
-                  <EventCard
-                    key={item.id}
-                    item={item}
-                    language={activeLanguage}
-                  />
-                ))}
-            </div>
-          </section>
+            {t.navGive}
+          </a>
+          <LangToggle />
         </div>
 
-        
-      </main>
-
-      <footer className="border-t border-slate-200 bg-white px-5 py-6 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-5xl space-y-4">
-          {/* Social links */}
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-500">
-                {t.footerFollowUs}
-              </p>
-              <div className="flex gap-2">
-                <SocialIcon
-                  href={socialLinks.facebook}
-                  ariaLabel="Facebook"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </SocialIcon>
-                <SocialIcon
-                  href={socialLinks.youtube}
-                  ariaLabel="YouTube"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </SocialIcon>
-                <SocialIcon
-                  href={socialLinks.instagram}
-                  ariaLabel="Instagram"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 0 1 1.772 1.153 4.902 4.902 0 0 1 1.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 0 1-1.153 1.772 4.902 4.902 0 0 1-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 0 1-1.772-1.153 4.902 4.902 0 0 1-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 0 1 1.153-1.772A4.902 4.902 0 0 1 5.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 0 0-.748-1.15 3.098 3.098 0 0 0-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 1 1 0 10.27 5.135 5.135 0 0 1 0-10.27zm0 8.468a3.333 3.333 0 1 1 0-6.666 3.333 3.333 0 0 1 0 6.666zm5.338-3.205a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </SocialIcon>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-3 text-[11px] text-slate-600 sm:flex-row sm:items-center sm:justify-between">
-            <p>
-              © {new Date().getFullYear()} McAllen North Seventh-day Adventist
-              Church. All rights reserved.
-            </p>
-            <p className="text-[10px]">{t.footerVerse}</p>
-          </div>
-        </div>
-      </footer>
-
-      {/* Language chooser overlay (first visit) */}
-      {language === null && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 px-6">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="language-dialog-title"
-            className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-xl ring-1 ring-slate-200"
+        {/* Mobile cluster */}
+        <div className="flex min-[900px]:hidden" style={{ alignItems: "center", gap: "14px" }}>
+          <LangToggle />
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Menu"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: "5px",
+              width: "44px",
+              height: "44px",
+              background: "transparent",
+              border: "1px solid #C9C3B2",
+              borderRadius: "10px",
+              cursor: "pointer",
+            }}
           >
-            <p
-              id="language-dialog-title"
-              className="text-sm font-semibold text-slate-900 sm:text-base"
-            >
-              {copy.en.langPromptTitle} / {copy.es.langPromptTitle}
-            </p>
-            <p className="mt-3 text-xs leading-relaxed text-slate-600">
-              {copy.en.langPromptBody}
-            </p>
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-center">
-              <button
-                type="button"
-                onClick={() => {
-                  setLanguage("en");
-                  if (typeof window !== "undefined") {
-                    window.localStorage.setItem(LANGUAGE_KEY, "en");
-                  }
-                }}
-                className="inline-flex flex-1 items-center justify-center rounded-full bg-[#c9a84c] px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#c9a84c]/40 transition hover:bg-[#c9a84c]/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                {copy.en.langEnglish}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setLanguage("es");
-                  if (typeof window !== "undefined") {
-                    window.localStorage.setItem(LANGUAGE_KEY, "es");
-                  }
-                }}
-                className="inline-flex flex-1 items-center justify-center rounded-full border border-slate-300 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-800 shadow-sm transition hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] focus-visible:ring-offset-2 focus-visible:ring-offset-white"
-              >
-                {copy.es.langSpanish}
-              </button>
-            </div>
-          </div>
+            <span style={{ width: "20px", height: "2px", background: "#22352F", display: "block" }} />
+            <span style={{ width: "20px", height: "2px", background: "#22352F", display: "block" }} />
+            <span style={{ width: "20px", height: "2px", background: "#22352F", display: "block" }} />
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE MENU */}
+      {menuOpen && (
+        <div
+          className="min-[900px]:hidden"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+            padding: "12px 20px 20px",
+            borderBottom: "1px solid #E4DFD2",
+            background: "#FAF7F0",
+          }}
+        >
+          <Link
+            href="/"
+            style={{ padding: "12px 8px", font: `500 17px ${sans}`, color: "#33534B", borderBottom: "1px solid #EFEBE0" }}
+          >
+            {t.navHome}
+          </Link>
+          <Link
+            href="/#about"
+            style={{ padding: "12px 8px", font: `500 17px ${sans}`, color: "#33534B", borderBottom: "1px solid #EFEBE0" }}
+          >
+            {t.navAbout}
+          </Link>
+          <Link
+            href="/announcements"
+            style={{ padding: "12px 8px", font: `600 17px ${sans}`, color: "#22352F", borderBottom: "1px solid #EFEBE0" }}
+          >
+            {t.navAnn}
+          </Link>
+          <a
+            href={DONATE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:bg-[#22352F] hover:text-white"
+            style={{
+              marginTop: "14px",
+              display: "inline-flex",
+              justifyContent: "center",
+              background: "#33534B",
+              color: "#fff",
+              padding: "14px 24px",
+              borderRadius: "999px",
+              font: `600 17px ${sans}`,
+            }}
+          >
+            {t.navGive}
+          </a>
         </div>
       )}
+
+      {/* QR BANNER */}
+      <div
+        style={{
+          background: "#C9971C",
+          color: "#22261A",
+          padding: "14px clamp(20px,5vw,72px)",
+          display: "flex",
+          alignItems: "center",
+          gap: "12px",
+          font: `600 15px ${sans}`,
+        }}
+      >
+        <span style={{ fontSize: "17px" }}>✦</span> {t.qrBanner}
+      </div>
+
+      {/* PAGE HEADER */}
+      <div style={{ padding: "clamp(48px,6vw,80px) clamp(20px,5vw,72px) clamp(40px,5vw,64px)" }}>
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "10px",
+            font: `600 14px ${sans}`,
+            letterSpacing: ".2em",
+            textTransform: "uppercase",
+            color: "#B0821A",
+            marginBottom: "22px",
+          }}
+        >
+          <span style={{ width: "34px", height: "1.5px", background: "#B0821A", display: "inline-block" }} />
+          {t.eyebrow}
+        </div>
+        <h1 style={{ margin: 0, font: `500 clamp(40px,6vw,72px)/1.08 ${serif}`, letterSpacing: "-.015em", color: "#22352F" }}>
+          {t.title}
+        </h1>
+      </div>
+
+      {/* CURRENT ANNOUNCEMENTS */}
+      <div style={{ padding: "0 clamp(20px,5vw,72px) clamp(48px,6vw,80px)" }}>
+        <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "8px 20px", marginBottom: "36px" }}>
+          <h2 style={{ margin: 0, font: `500 38px ${serif}`, color: "#22352F" }}>{t.curT}</h2>
+          <div style={{ font: `400 16px ${sans}`, color: "#8A8474" }}>{t.curD}</div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(340px,100%),1fr))", gap: "28px" }}>
+          {currentAnnouncements.map((item) => (
+            <div key={item.id} style={{ background: "#fff", border: "1px solid #E4DFD2", padding: "40px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              {item.kicker && (
+                <div style={{ font: `700 13px ${sans}`, letterSpacing: ".16em", textTransform: "uppercase", color: "#B0821A" }}>{item.kicker}</div>
+              )}
+              <div style={{ font: `500 26px ${serif}`, color: "#22352F" }}>{item.title}</div>
+              <p style={{ margin: 0, font: `400 17px/1.6 ${sans}`, color: "#4B564F" }}>{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* UPCOMING EVENTS */}
+      <div style={{ background: "#fff", padding: "clamp(56px,7vw,88px) clamp(20px,5vw,72px)" }}>
+        <div style={{ display: "flex", alignItems: "baseline", flexWrap: "wrap", gap: "8px 20px", marginBottom: "44px" }}>
+          <h2 style={{ margin: 0, font: `500 38px ${serif}`, color: "#22352F" }}>{t.upT}</h2>
+          <div style={{ font: `400 16px ${sans}`, color: "#8A8474" }}>{t.upD}</div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: "28px" }}>
+          {upcomingEvents.map((ev) => (
+            <div key={ev.id} style={{ border: "1px solid #E4DFD2", padding: "38px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              {ev.kicker && (
+                <div style={{ font: `700 13px ${sans}`, letterSpacing: ".16em", textTransform: "uppercase", color: "#33534B" }}>{ev.kicker}</div>
+              )}
+              <div style={{ font: `500 25px ${serif}`, color: "#22352F" }}>{ev.title}</div>
+              <p style={{ margin: 0, font: `400 16px/1.6 ${sans}`, color: "#4B564F" }}>{ev.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <div style={{ background: "#1B2A25", color: "#fff", padding: "clamp(48px,6vw,72px) clamp(20px,5vw,72px) 36px" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit,minmax(min(280px,100%),1fr))",
+            gap: "clamp(32px,4.5vw,64px)",
+            paddingBottom: "52px",
+            borderBottom: "1px solid rgba(255,255,255,.15)",
+          }}
+        >
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" }}>
+              <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <img src="/adventist-logo.png" alt="" style={{ width: "32px", height: "auto" }} />
+              </div>
+              <div>
+                <div style={{ font: `600 20px ${serif}` }}>{t.brand1}</div>
+                <div style={{ font: `500 11px ${sans}`, letterSpacing: ".16em", textTransform: "uppercase", color: "rgba(255,255,255,.6)" }}>
+                  {t.brand2}
+                </div>
+              </div>
+            </div>
+            <p style={{ margin: 0, font: `italic 400 17px/1.65 ${serif}`, color: "rgba(255,255,255,.75)", maxWidth: "400px" }}>
+              {t.verse}
+            </p>
+          </div>
+          <div>
+            <div style={{ font: `700 13px ${sans}`, letterSpacing: ".18em", textTransform: "uppercase", color: "#E5B93C", marginBottom: "18px" }}>
+              {t.whereT}
+            </div>
+            <div style={{ font: `400 17px/1.7 ${sans}`, color: "rgba(255,255,255,.85)" }}>
+              {t.addr1}
+              <br />
+              {t.addr2}
+            </div>
+            <div style={{ font: `400 17px ${sans}`, color: "rgba(255,255,255,.85)", marginTop: "12px" }}>{t.call}</div>
+          </div>
+          <div>
+            <div style={{ font: `700 13px ${sans}`, letterSpacing: ".18em", textTransform: "uppercase", color: "#E5B93C", marginBottom: "18px" }}>
+              {t.followT}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", font: `400 17px ${sans}` }}>
+              <a href={SOCIAL.facebook} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,.85)" }}>
+                Facebook
+              </a>
+              <a href={SOCIAL.youtube} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,.85)" }}>
+                {t.yt}
+              </a>
+              <a href={SOCIAL.instagram} target="_blank" rel="noopener noreferrer" style={{ color: "rgba(255,255,255,.85)" }}>
+                Instagram
+              </a>
+            </div>
+          </div>
+        </div>
+        <div style={{ paddingTop: "26px", font: `400 14px ${sans}`, color: "rgba(255,255,255,.5)" }}>{t.copy}</div>
+      </div>
     </div>
   );
 }

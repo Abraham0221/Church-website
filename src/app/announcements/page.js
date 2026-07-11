@@ -30,7 +30,7 @@ const STRINGS = {
     title: "Announcements & Events",
     curT: "Current Announcements",
     curD: "Updated regularly. Check back each Sabbath for the latest information.",
-    upT: "Upcoming Events",
+    upT: "Events",
     upD: "Highlighting regular gatherings and special events in our church life.",
     whereT: "Where we meet",
     addr1: "1217 N 27th 1/2 St,",
@@ -54,7 +54,7 @@ const STRINGS = {
     title: "Anuncios y Eventos",
     curT: "Anuncios Actuales",
     curD: "Se actualiza regularmente. Vuelve cada sábado para la información más reciente.",
-    upT: "Próximos Eventos",
+    upT: "Eventos",
     upD: "Destacando las reuniones regulares y los eventos especiales de nuestra vida de iglesia.",
     whereT: "Dónde nos reunimos",
     addr1: "1217 N 27th 1/2 St,",
@@ -125,6 +125,7 @@ export default function AnnouncementsPage() {
       kicker: [date, time].filter(Boolean).join(" • "),
       title: isEs ? item.titleEs : item.titleEn,
       description: isEs ? item.descriptionEs : item.descriptionEn,
+      image: item.image || "",
     };
   };
 
@@ -345,12 +346,17 @@ export default function AnnouncementsPage() {
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(300px,100%),1fr))", gap: "28px" }}>
           {upcomingEvents.map((ev) => (
-            <div key={ev.id} style={{ border: "1px solid #E4DFD2", padding: "38px", display: "flex", flexDirection: "column", gap: "12px" }}>
-              {ev.kicker && (
-                <div style={{ font: `700 13px ${sans}`, letterSpacing: ".16em", textTransform: "uppercase", color: "#33534B" }}>{ev.kicker}</div>
+            <div key={ev.id} style={{ border: "1px solid #E4DFD2", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+              {ev.image && (
+                <img src={ev.image} alt="" style={{ width: "100%", height: "200px", objectFit: "cover", display: "block" }} />
               )}
-              <div style={{ font: `500 25px ${serif}`, color: "#22352F" }}>{ev.title}</div>
-              <p style={{ margin: 0, font: `400 16px/1.6 ${sans}`, color: "#4B564F" }}>{ev.description}</p>
+              <div style={{ padding: "38px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                {ev.kicker && (
+                  <div style={{ font: `700 13px ${sans}`, letterSpacing: ".16em", textTransform: "uppercase", color: "#33534B" }}>{ev.kicker}</div>
+                )}
+                <div style={{ font: `500 25px ${serif}`, color: "#22352F" }}>{ev.title}</div>
+                <p style={{ margin: 0, font: `400 16px/1.6 ${sans}`, color: "#4B564F" }}>{ev.description}</p>
+              </div>
             </div>
           ))}
         </div>

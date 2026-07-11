@@ -37,8 +37,21 @@ export const announcements = [
   },
 ];
 
-// "Upcoming Events" — the bordered cards further down the page.
+// "Events" — the bordered cards further down the page.
+//   image = optional. Put the file in /public and reference it as "/name.jpg".
+//           Leave it off (or "") for a text-only card.
 export const events = [
+  {
+    id: "vbs",
+    titleEn: "VBS",
+    titleEs: "VBS",
+    dateEn: "",
+    dateEs: "",
+    time: "",
+    descriptionEn: "Summer School Event",
+    descriptionEs: "Evento de Escuelita de Verano",
+    image: "/vbsimage.jpg",
+  },
   {
     id: "sabbath-worship",
     titleEn: "Sabbath Worship Service",
